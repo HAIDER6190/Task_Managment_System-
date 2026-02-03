@@ -1,24 +1,34 @@
-const crypto = require("crypto");
+const mongoose = require("mongoose");
 
-function createUser({ username, email, password, securityQuestion, answer }) {
-    // Generate verification token
-    const token = crypto.randomBytes(32).toString("hex");
-    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+const userSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    securityQuestion: {
+        type: String,
+        required: true
+    },
+    answer: {
+        type: String,
+        required: true
+    },
+    role: {
+        type: String,
+        enum: ["Admin", "User"],
+        default: "User"
+    }
+}, { timestamps: true });
 
-    return {
-        username,
-        email,
-        password,
-        securityQuestion,
-        answer,
-        isVerified: false,
-        emailVerifyToken: hashedToken,
-        emailVerifyExpires: Date.now() + 24 * 60 * 60 * 1000, // expires in 24 hours
-        createdAt: new Date(),
-        emailToken: token // this is sent to user via email, 
-    };
-}
-
-module.exports = {
-    createUser
-};
+module.exports = mongoose.model("User", userSchema);

@@ -1,140 +1,194 @@
-const { getDB } = require("../config/db");
-const { createTask } = require("../model/Tasks");
-const { ObjectId } = require("mongodb");
+const Task = require("../model/Tasks");
 
-// sanitize input
-function sanitize(value) {
-    if (typeof value === "string") {
-        return value.replace(/\$/g, "");
+/* ================= HELPER ================= */
+/* ================= HELPER ================= */
+const autoLockIfOverdue = async (task) => {
+    if (task.dueDate < new Date() && task.status === "Todo" && !task.unlockedByAdmin) {
+        task.locked = true;
+        await task.save();
     }
-    return value;
-}
+};
 
-// 1. CREATE TASK
-async function addTask(req, res) {
+/* ================= ADMIN CREATE TASK ================= */
+exports.createTask = async (req, res, next) => {
     try {
-        const db = getDB();
+        const { title, description, priority, assignedTo, dueDate } = req.body;
 
-        const { title, description, status, priority, dueDate } = req.body;
-        const userId = req.user.id; // from JWT middleware
-
-        if (!title) {
-            return res.status(400).json({ error: "Title is required" });
+        if (!title || !assignedTo || !dueDate) {
+            const err = new Error("title, assignedTo and dueDate are required");
+            err.statusCode = 400;
+            return next(err);
         }
 
-        const task = createTask({
-            title: sanitize(title),
-            description: sanitize(description),
-            status,
+        if (priority && !["Low", "Medium", "High"].includes(priority)) {
+            const err = new Error("Invalid priority");
+            err.statusCode = 400;
+            return next(err);
+        }
+
+        const task = await Task.create({
+            title,
+            description,
             priority,
+            assignedTo,
             dueDate,
-            userId
+            createdBy: req.user._id
         });
 
-        await db.collection("tasks").insertOne(task);
+        const populatedTask = await Task.findById(task._id)
+            .populate("assignedTo", "username email")
+            .populate("createdBy", "username");
 
-        res.status(201).json({
-            message: "Task created successfully",
-            taskId: task._id
-        });
-
+        res.status(201).json(populatedTask);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        next(err);
     }
-}
+};
 
-// 2. GET ALL TASKS (USER ONLY)
-async function getMyTasks(req, res) {
+/* ================= USER GET MY TASKS ================= */
+exports.getMyTasks = async (req, res, next) => {
     try {
-        const db = getDB();
-        const userId = new ObjectId(req.user.id);
-
-        const tasks = await db
-            .collection("tasks")
-            .find({ userId })
-            .toArray();
+        const tasks = await Task.find({ assignedTo: req.user._id })
+            .populate("assignedTo", "username email")
+            .populate("createdBy", "username");
 
         res.json(tasks);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        next(err);
     }
-}
+};
 
-// 3. GET SINGLE TASK
-async function getTaskById(req, res) {
+/* ================= COMPLETE TASK ================= */
+exports.completeTask = async (req, res, next) => {
     try {
-        const db = getDB();
-        const taskId = new ObjectId(req.params.id);
-        const userId = new ObjectId(req.user.id);
-
-        const task = await db.collection("tasks").findOne({
-            _id: taskId,
-            userId
+        const task = await Task.findOne({
+            _id: req.params.id,
+            assignedTo: req.user._id
         });
 
         if (!task) {
-            return res.status(404).json({ error: "Task not found" });
+            const err = new Error("Task not found");
+            err.statusCode = 404;
+            return next(err);
         }
 
-        res.json(task);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
+        await autoLockIfOverdue(task);
 
-// 4. UPDATE TASK
-async function updateTask(req, res) {
-    try {
-        const db = getDB();
-        const taskId = new ObjectId(req.params.id);
-        const userId = new ObjectId(req.user.id);
-
-        const updateData = {
-            ...req.body,
-            updatedAt: new Date()
-        };
-
-        const result = await db.collection("tasks").updateOne(
-            { _id: taskId, userId },
-            { $set: updateData }
-        );
-
-        if (result.matchedCount === 0) {
-            return res.status(404).json({ error: "Task not found" });
+        if (task.locked) {
+            const err = new Error("Task is locked due to overdue");
+            err.statusCode = 403;
+            return next(err);
         }
 
-        res.json({ message: "Task updated successfully" });
+        if (task.status !== "Todo") {
+            const err = new Error("Task cannot be completed");
+            err.statusCode = 400;
+            return next(err);
+        }
+
+        task.status = "Completed";
+        await task.save();
+
+        res.json({ message: "Task completed successfully" });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        next(err);
     }
-}
+};
 
-// 5. DELETE TASK
-async function deleteTask(req, res) {
+/* ================= SUBMIT EXCUSE ================= */
+exports.submitExcuse = async (req, res, next) => {
     try {
-        const db = getDB();
-        const taskId = new ObjectId(req.params.id);
-        const userId = new ObjectId(req.user.id);
+        const { excuse } = req.body;
 
-        const result = await db.collection("tasks").deleteOne({
-            _id: taskId,
-            userId
+        if (!excuse || excuse.length < 32) {
+            const err = new Error("Excuse must be at least 32 characters");
+            err.statusCode = 400;
+            return next(err);
+        }
+
+        const task = await Task.findOne({
+            _id: req.params.id,
+            assignedTo: req.user._id
         });
 
-        if (result.deletedCount === 0) {
-            return res.status(404).json({ error: "Task not found" });
+        if (!task) {
+            const err = new Error("Task not found");
+            err.statusCode = 404;
+            return next(err);
         }
 
-        res.json({ message: "Task deleted successfully" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
+        await autoLockIfOverdue(task);
 
-module.exports = {
-    addTask,
-    getMyTasks,
-    getTaskById,
-    updateTask,
-    deleteTask
+        if (task.locked) {
+            const err = new Error("Task is locked due to overdue");
+            err.statusCode = 403;
+            return next(err);
+        }
+
+        if (task.status !== "Todo") {
+            const err = new Error("Cannot submit excuse");
+            err.statusCode = 400;
+            return next(err);
+        }
+
+        task.excuse = excuse;
+        task.adminResponse = null;
+        task.adminResponseMessage = null;
+        await task.save();
+
+        res.json({ message: "Excuse submitted successfully" });
+    } catch (err) {
+        next(err);
+    }
+};
+
+/* ================= ADMIN RESPOND EXCUSE ================= */
+exports.respondExcuse = async (req, res, next) => {
+    try {
+        const { response, message } = req.body;
+
+        if (!["accepted", "declined"].includes(response)) {
+            const err = new Error("Invalid response");
+            err.statusCode = 400;
+            return next(err);
+        }
+
+        const task = await Task.findById(req.params.id);
+
+        if (!task || !task.excuse) {
+            const err = new Error("No excuse found");
+            err.statusCode = 404;
+            return next(err);
+        }
+
+        task.adminResponse = response;
+        task.adminResponseMessage = message || "";
+        task.status = response === "accepted" ? "Excused" : "Todo";
+
+        await task.save();
+        res.json({ message: "Excuse reviewed successfully" });
+    } catch (err) {
+        next(err);
+    }
+};
+
+/* ================= ADMIN UNLOCK TASK ================= */
+exports.unlockTask = async (req, res, next) => {
+    try {
+        const task = await Task.findById(req.params.id);
+
+        if (!task) {
+            const err = new Error("Task not found");
+            err.statusCode = 404;
+            return next(err);
+        }
+
+        task.locked = false;
+        task.unlockedByAdmin = true;
+        await task.save();
+
+        res.json({ message: "Task unlocked successfully" });
+    } catch (err) {
+        next(err);
+    }
 };

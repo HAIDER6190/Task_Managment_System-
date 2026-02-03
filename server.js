@@ -1,29 +1,21 @@
-const express = require("express");
-const { connectDB, getDB } = require("./config/db"); //  getDB
-const userRouters = require("./router/userRoutes");
-const apiLimiter = require("./middleware/ratelimit");
-const taskRoutes = require("./router/TaskRouters");
+require("dotenv").config();
+console.log("✅ server.js loaded");
 
+const app = require("./app");
+const connectDB = require("./config/db");
 
-const app = express();
-
-app.use(apiLimiter);
-app.use(express.json());
+const PORT = process.env.PORT || 5000;
 
 (async () => {
-    await connectDB(); // connect to MongoDB
-    const db = getDB(); // get the database instance
+    try {
+        console.log("⏳ Connecting to DB...");
+        await connectDB();
+        console.log("✅ DB connected");
 
-    // Create TTL index for pendingUsers (20 minutes)
-    await db.collection("pendingUsers").createIndex(
-        { createdAt: 1 },
-        { expireAfterSeconds: 1200 } // 20 minutes
-    );
-    console.log("TTL index created for pendingUsers collection");
-
-    // Routes
-    app.use("/api/tasks", taskRoutes);
-    app.use("/api/users", userRouters);
-
-    app.listen(5000, () => console.log("Server running on port 5000"));
+        app.listen(PORT, () => {
+            console.log(`🚀 Server running on port ${PORT}`);
+        });
+    } catch (err) {
+        console.error("❌ Startup error:", err);
+    }
 })();

@@ -1,20 +1,16 @@
-// db/db.js
-const { MongoClient } = require("mongodb");
+// config/db.js
+const mongoose = require("mongoose");
 
-const uri = process.env.MONGO_URI  // local MongoDB
-const client = new MongoClient(uri);
+const connectDB = async () => {
+    try {
+        await mongoose.connect(
+            "mongodb://127.0.0.1:27017/Task"
+        );
+        console.log(" MongoDB connected (Mongoose)");
+    } catch (err) {
+        console.error(" MongoDB connection failed:", err.message);
+        process.exit(1);
+    }
+};
 
-let db;
-
-async function connectDB() {
-    await client.connect();
-    db = client.db();
-    console.log("Connected to local MongoDB");
-}
-
-function getDB() {
-    if (!db) throw new Error("Database not connected");
-    return db;
-}
-
-module.exports = { connectDB, getDB };
+module.exports = connectDB;
