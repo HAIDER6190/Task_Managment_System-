@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { createTask, getTaskById, getUsers } from "../../../api/admin";
+import { createTask, updateTask, getTaskById, getUsers } from "../../../api/admin";
 import Spinner from "../../../components/Spinner";
 import Alert from "../../../components/Alert";
 import Button from "../../../components/Button";
@@ -77,6 +77,11 @@ export default function AdminTaskFormPage({ mode = "create" }) {
       return;
     }
 
+    if (new Date(form.dueDate) < new Date()) {
+      setError("Due date must be in the future.");
+      return;
+    }
+
     setSaving(true);
     try {
       const payload = {
@@ -91,7 +96,7 @@ export default function AdminTaskFormPage({ mode = "create" }) {
         setSuccess("Task created successfully.");
         setTimeout(() => navigate("/admin/tasks"), 800);
       } else {
-        await createTask({ ...payload, taskId });
+        await updateTask(taskId, payload);
         setSuccess("Task updated successfully.");
       }
     } catch (err) {
@@ -116,10 +121,10 @@ export default function AdminTaskFormPage({ mode = "create" }) {
             <FiCheckSquare className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">
+            <h1 className="text-xl font-bold text-primary-themed">
               {isEdit ? "Edit Task" : "Create New Task"}
             </h1>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-muted-themed">
               {isEdit ? "Update task details" : "Assign a new task to a user"}
             </p>
           </div>
@@ -131,7 +136,7 @@ export default function AdminTaskFormPage({ mode = "create" }) {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Title */}
           <div className="space-y-1.5">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-300">
+            <label className="flex items-center gap-2 text-sm font-medium text-secondary-themed">
               <FiFileText size={16} />
               Task Title
             </label>
@@ -146,7 +151,7 @@ export default function AdminTaskFormPage({ mode = "create" }) {
 
           {/* Description */}
           <div className="space-y-1.5">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-300">
+            <label className="flex items-center gap-2 text-sm font-medium text-secondary-themed">
               <FiFileText size={16} />
               Description
             </label>
@@ -164,7 +169,7 @@ export default function AdminTaskFormPage({ mode = "create" }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Priority */}
             <div className="space-y-1.5">
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-300">
+              <label className="flex items-center gap-2 text-sm font-medium text-secondary-themed">
                 <FiFlag size={16} />
                 Priority
               </label>
@@ -174,15 +179,15 @@ export default function AdminTaskFormPage({ mode = "create" }) {
                 onChange={handleChange}
                 className="glass-input w-full cursor-pointer"
               >
-                <option value="Low" className="bg-dark-800">Low</option>
-                <option value="Medium" className="bg-dark-800">Medium</option>
-                <option value="High" className="bg-dark-800">High</option>
+                <option value="Low" className="bg-surface">Low</option>
+                <option value="Medium" className="bg-surface">Medium</option>
+                <option value="High" className="bg-surface">High</option>
               </select>
             </div>
 
             {/* Assign To - User Dropdown */}
             <div className="space-y-1.5">
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-300">
+              <label className="flex items-center gap-2 text-sm font-medium text-secondary-themed">
                 <FiUser size={16} />
                 Assign To
               </label>
@@ -192,9 +197,9 @@ export default function AdminTaskFormPage({ mode = "create" }) {
                 onChange={handleChange}
                 className="glass-input w-full cursor-pointer"
               >
-                <option value="" className="bg-dark-800">Select a user...</option>
+                <option value="" className="bg-surface">Select a user...</option>
                 {users.map((user) => (
-                  <option key={user._id} value={user._id} className="bg-dark-800">
+                  <option key={user._id} value={user._id} className="bg-surface">
                     {user.username} ({user.email})
                   </option>
                 ))}
@@ -207,7 +212,7 @@ export default function AdminTaskFormPage({ mode = "create" }) {
 
           {/* Due Date */}
           <div className="space-y-1.5">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-300">
+            <label className="flex items-center gap-2 text-sm font-medium text-secondary-themed">
               <FiCalendar size={16} />
               Due Date
             </label>
@@ -221,7 +226,7 @@ export default function AdminTaskFormPage({ mode = "create" }) {
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
+          <div className="flex justify-end gap-3 pt-4 border-t border-themed">
             <Button
               type="button"
               variant="secondary"

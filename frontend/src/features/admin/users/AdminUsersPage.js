@@ -69,12 +69,12 @@ export default function AdminUsersPage() {
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+        <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center">
           <FiUsers className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-white">Users</h1>
-          <p className="text-sm text-gray-400">
+          <h1 className="text-2xl font-bold text-primary-themed">Users</h1>
+          <p className="text-sm text-muted-themed">
             Manage all registered users
           </p>
         </div>
@@ -107,9 +107,9 @@ export default function AdminUsersPage() {
               onChange={(e) => setRoleFilter(e.target.value)}
               className="glass-input flex-1 cursor-pointer"
             >
-              <option value="" className="bg-dark-800">All Roles</option>
-              <option value="Admin" className="bg-dark-800">Admin</option>
-              <option value="User" className="bg-dark-800">User</option>
+              <option value="" className="bg-surface">All Roles</option>
+              <option value="Admin" className="bg-surface">Admin</option>
+              <option value="User" className="bg-surface">User</option>
             </select>
             <Button type="submit" variant="secondary" icon={FiFilter}>
               Filter
@@ -120,8 +120,8 @@ export default function AdminUsersPage() {
 
       {/* Users Table */}
       <div className="glass-card-dark overflow-hidden">
-        <div className="px-6 py-4 border-b border-white/10">
-          <h2 className="text-lg font-semibold text-white">All Users</h2>
+        <div className="px-6 py-4 border-b border-themed">
+          <h2 className="text-lg font-semibold text-primary-themed">All Users</h2>
         </div>
 
         {loading ? (
@@ -157,14 +157,14 @@ export default function AdminUsersPage() {
                           </div>
                           <Link
                             to={`/admin/users/${id}`}
-                            className="font-medium text-white hover:text-primary transition-colors"
+                            className="font-medium text-primary-themed hover:text-primary transition-colors"
                           >
                             {user.username}
                           </Link>
                         </div>
                       </td>
                       <td>
-                        <div className="flex items-center gap-2 text-gray-400">
+                        <div className="flex items-center gap-2 text-muted-themed">
                           <FiMail size={14} />
                           {user.email}
                         </div>
@@ -175,7 +175,7 @@ export default function AdminUsersPage() {
                           {user.role || "User"}
                         </span>
                       </td>
-                      <td className="text-gray-400">
+                      <td className="text-secondary-themed">
                         {user.createdAt
                           ? new Date(user.createdAt).toLocaleDateString()
                           : "-"}

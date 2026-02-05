@@ -110,17 +110,17 @@ export default function UserDashboardPage() {
     <div className="space-y-6 animate-fade-in">
       {/* Welcome Header */}
       <div className="flex items-center gap-4">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-          <span className="text-2xl font-bold text-white">
+        <div className="w-14 h-14 rounded-xl bg-primary flex items-center justify-center">
+          <span className="text-2xl font-semibold text-white">
             {profile?.username?.charAt(0).toUpperCase()}
           </span>
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-white">
-            Welcome back, {profile?.username}!
+          <h1 className="text-2xl font-semibold text-primary-themed">
+            Welcome back, {profile?.username}
           </h1>
-          <p className="text-gray-400">
-            Here's your task overview for today
+          <p className="text-muted-themed">
+            Here's your task overview
           </p>
         </div>
       </div>
@@ -134,26 +134,29 @@ export default function UserDashboardPage() {
           icon={FiClock}
           label="Pending"
           value={stats.pending}
-          color="from-blue-500 to-cyan-500"
+          iconColor="text-blue-400"
+          bgColor="bg-blue-500/15"
         />
         <StatCard
           icon={FiCheck}
           label="Completed"
           value={stats.completed}
-          color="from-green-500 to-emerald-500"
+          iconColor="text-green-400"
+          bgColor="bg-green-500/15"
         />
         <StatCard
           icon={FiAlertTriangle}
           label="Overdue"
           value={stats.overdue}
-          color="from-red-500 to-rose-500"
+          iconColor="text-red-400"
+          bgColor="bg-red-500/15"
         />
       </div>
 
       {/* Tasks Section */}
       <div className="glass-card-dark overflow-hidden">
         {/* Header with Filters */}
-        <div className="px-6 py-4 border-b border-white/10">
+        <div className="px-6 py-4 border-b border-white/5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <FiCheckSquare className="text-primary" size={20} />
@@ -267,16 +270,16 @@ export default function UserDashboardPage() {
   );
 }
 
-function StatCard({ icon: Icon, label, value, color }) {
+function StatCard({ icon: Icon, label, value, iconColor, bgColor }) {
   return (
     <div className="stat-card">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-gray-400 text-sm mb-1">{label}</p>
-          <p className="text-3xl font-bold text-white">{value}</p>
+          <p className="text-muted-themed text-sm mb-1">{label}</p>
+          <p className="text-3xl font-semibold text-primary-themed">{value}</p>
         </div>
-        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center`}>
-          <Icon className="w-6 h-6 text-white" />
+        <div className={`w-11 h-11 rounded-lg ${bgColor} flex items-center justify-center`}>
+          <Icon className={`w-5 h-5 ${iconColor}`} />
         </div>
       </div>
     </div>
@@ -299,7 +302,7 @@ function StatusBadge({ value, locked }) {
   const map = {
     Todo: "badge-info",
     Completed: "badge-success",
-    Excused: "badge-purple",
+    Excused: "badge-neutral",
   };
   return <span className={`badge ${map[value] || "badge-info"}`}>{value || "N/A"}</span>;
 }

@@ -153,8 +153,8 @@ export default function AdminTaskDetailPage() {
             <FiArrowLeft size={20} />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-white">{task.title}</h1>
-            <p className="text-sm text-gray-400">
+            <h1 className="text-2xl font-bold text-primary-themed">{task.title}</h1>
+            <p className="text-sm text-secondary-themed">
               Created by {task.createdBy?.username || task.createdBy || "Unknown"}
             </p>
           </div>
@@ -196,9 +196,9 @@ export default function AdminTaskDetailPage() {
         </div>
 
         {task.description && (
-          <div className="border-t border-white/10 pt-4">
-            <h3 className="text-sm font-medium text-gray-400 mb-2">Description</h3>
-            <p className="text-gray-300 whitespace-pre-wrap">{task.description}</p>
+          <div className="border-t border-themed pt-4">
+            <h3 className="text-sm font-medium text-muted-themed mb-2">Description</h3>
+            <p className="text-secondary-themed whitespace-pre-wrap">{task.description}</p>
           </div>
         )}
       </div>
@@ -211,12 +211,12 @@ export default function AdminTaskDetailPage() {
             <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
               <FiUser className="text-blue-400" size={20} />
             </div>
-            <h2 className="text-lg font-semibold text-white">Reassign Task</h2>
+            <h2 className="text-lg font-semibold text-primary-themed">Reassign Task</h2>
           </div>
 
           <form onSubmit={handleReassign} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1.5">
+              <label className="block text-sm font-medium text-secondary-themed mb-1.5">
                 Assign to User
               </label>
               <select
@@ -224,9 +224,9 @@ export default function AdminTaskDetailPage() {
                 onChange={(e) => setAssignedTo(e.target.value)}
                 className="glass-input w-full cursor-pointer"
               >
-                <option value="" className="bg-dark-800">Select a user...</option>
+                <option value="" className="bg-surface">Select a user...</option>
                 {users.map((user) => (
-                  <option key={user._id} value={user._id} className="bg-dark-800">
+                  <option key={user._id} value={user._id} className="bg-surface">
                     {user.username} ({user.email})
                   </option>
                 ))}
@@ -244,19 +244,19 @@ export default function AdminTaskDetailPage() {
             <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
               <FiMessageCircle className="text-purple-400" size={20} />
             </div>
-            <h2 className="text-lg font-semibold text-white">Respond to Excuse</h2>
+            <h2 className="text-lg font-semibold text-primary-themed">Respond to Excuse</h2>
           </div>
 
           {task.excuse && (
-            <div className="bg-white/5 rounded-xl p-4 mb-4 border border-white/10">
-              <p className="text-sm text-gray-400 mb-1">User's excuse:</p>
-              <p className="text-gray-300">"{task.excuse}"</p>
+            <div className="bg-surface-elevated rounded-xl p-4 mb-4 border border-themed">
+              <p className="text-sm text-muted-themed mb-1">User's excuse:</p>
+              <p className="text-secondary-themed">"{task.excuse}"</p>
             </div>
           )}
 
           <form onSubmit={handleRespond} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1.5">
+              <label className="block text-sm font-medium text-secondary-themed mb-1.5">
                 Response
               </label>
               <select
@@ -269,12 +269,12 @@ export default function AdminTaskDetailPage() {
                 }
                 className="glass-input w-full cursor-pointer"
               >
-                <option value="accepted" className="bg-dark-800">✓ Accepted</option>
-                <option value="declined" className="bg-dark-800">✗ Declined</option>
+                <option value="accepted" className="bg-surface">✓ Accepted</option>
+                <option value="declined" className="bg-surface">✗ Declined</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1.5">
+              <label className="block text-sm font-medium text-secondary-themed mb-1.5">
                 Message (optional)
               </label>
               <textarea
@@ -296,8 +296,8 @@ export default function AdminTaskDetailPage() {
           </form>
 
           {task.adminResponse && (
-            <div className="mt-4 pt-4 border-t border-white/10">
-              <p className="text-sm text-gray-400 mb-2">Previous Response:</p>
+            <div className="mt-4 pt-4 border-t border-themed">
+              <p className="text-sm text-muted-themed mb-2">Previous Response:</p>
               <div className="flex items-center gap-2">
                 {task.adminResponse === "accepted" ? (
                   <span className="badge badge-success"><FiCheck size={12} className="mr-1" /> Accepted</span>
@@ -306,7 +306,7 @@ export default function AdminTaskDetailPage() {
                 )}
               </div>
               {task.adminResponseMessage && (
-                <p className="text-gray-300 text-sm mt-2">"{task.adminResponseMessage}"</p>
+                <p className="text-secondary-themed text-sm mt-2">"{task.adminResponseMessage}"</p>
               )}
             </div>
           )}
@@ -322,8 +322,8 @@ export default function AdminTaskDetailPage() {
                 <FiLock className="text-amber-400" size={20} />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-white">Task is Locked</h2>
-                <p className="text-sm text-gray-400">This task was locked due to being overdue</p>
+                <h2 className="text-lg font-semibold text-primary-themed">Task is Locked</h2>
+                <p className="text-sm text-muted-themed">This task was locked due to being overdue</p>
               </div>
             </div>
             <Button
@@ -341,10 +341,10 @@ export default function AdminTaskDetailPage() {
   );
 }
 
-function InfoCard({ icon: Icon, label, value, color = "text-white" }) {
+function InfoCard({ icon: Icon, label, value, color = "text-primary-themed" }) {
   return (
-    <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-      <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
+    <div className="bg-surface-elevated rounded-xl p-4 border border-themed">
+      <div className="flex items-center gap-2 text-muted-themed text-sm mb-1">
         <Icon size={14} />
         {label}
       </div>

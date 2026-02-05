@@ -47,11 +47,11 @@ export default function LoginPage() {
     <div className="animate-fade-in">
       {/* Logo / Header */}
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary mb-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary mb-4">
           <FiLogIn className="w-8 h-8 text-white" />
         </div>
-        <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
-        <p className="text-gray-400">
+        <h1 className="text-3xl font-bold text-primary-themed mb-2">Welcome Back</h1>
+        <p className="text-secondary-themed">
           Sign in to access your task dashboard
         </p>
       </div>
@@ -78,6 +78,15 @@ export default function LoginPage() {
           icon={FiLock}
         />
 
+        <div className="flex justify-end">
+          <Link
+            to="/forgot-password"
+            className="text-sm font-medium text-primary hover:text-primary-light transition-colors"
+          >
+            Forgot Password?
+          </Link>
+        </div>
+
         <Button
           type="submit"
           className="w-full mt-6"
@@ -88,12 +97,12 @@ export default function LoginPage() {
         </Button>
       </form>
 
-      <div className="mt-8 pt-6 border-t border-white/10">
-        <p className="text-center text-gray-400">
+      <div className="mt-8 pt-6 border-t border-themed">
+        <p className="text-center text-secondary-themed">
           Don't have an account?{" "}
           <Link
             to="/register"
-            className="font-semibold text-primary hover:text-primary-light transition-colors inline-flex items-center gap-1"
+            className="font-semibold text-primary hover:text-primary-dark transition-colors inline-flex items-center gap-1"
           >
             <FiUserPlus size={16} />
             Create Account

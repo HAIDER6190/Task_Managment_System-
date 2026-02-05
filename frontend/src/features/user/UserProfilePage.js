@@ -4,7 +4,14 @@ import Spinner from "../../components/Spinner";
 import Alert from "../../components/Alert";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
-import { FiUser, FiMail, FiShield, FiCalendar, FiEdit2, FiSave, FiX } from "react-icons/fi";
+import { FiUser, FiMail, FiShield, FiCalendar, FiEdit2, FiSave, FiX, FiHelpCircle } from "react-icons/fi";
+
+const SECURITY_QUESTIONS = [
+  "What's your favorite color?",
+  "Who was your favorite teacher in secondary school?",
+  "Who is your favorite football player?",
+  "Who was your idol growing up?",
+];
 
 export default function UserProfilePage() {
   const [profile, setProfile] = useState(null);
@@ -16,6 +23,8 @@ export default function UserProfilePage() {
   const [form, setForm] = useState({
     username: "",
     email: "",
+    securityQuestion: "",
+    answer: "",
   });
 
   useEffect(() => {
@@ -29,6 +38,8 @@ export default function UserProfilePage() {
         setForm({
           username: data.username || "",
           email: data.email || "",
+          securityQuestion: data.securityQuestion || "",
+          answer: "", // Don't show existing answer for security
         });
       } catch (err) {
         if (!isMounted) return;
@@ -96,16 +107,16 @@ export default function UserProfilePage() {
       <div className="glass-card-dark p-6 md:p-8">
         {/* Header */}
         <div className="flex items-center gap-5 mb-8">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-            <span className="text-3xl font-bold text-white">
+          <div className="w-20 h-20 rounded-xl bg-primary flex items-center justify-center">
+            <span className="text-3xl font-semibold text-white">
               {profile.username?.charAt(0).toUpperCase()}
             </span>
           </div>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-white">{profile.username}</h1>
-            <p className="text-gray-400">{profile.email}</p>
+            <h1 className="text-2xl font-semibold text-primary-themed">{profile.username}</h1>
+            <p className="text-muted-themed">{profile.email}</p>
             <div className="flex items-center gap-2 mt-2">
-              <span className="badge badge-purple">
+              <span className="badge badge-info">
                 <FiShield size={12} className="mr-1" />
                 {profile.role?.toUpperCase() || "USER"}
               </span>
@@ -145,6 +156,35 @@ export default function UserProfilePage() {
               icon={FiMail}
               placeholder="Enter email"
             />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="space-y-1.5">
+                <label className="block text-sm font-medium text-gray-300">
+                  <FiHelpCircle className="inline mr-2" size={16} />
+                  Security Question
+                </label>
+                <select
+                  name="securityQuestion"
+                  value={form.securityQuestion}
+                  onChange={handleChange}
+                  className="glass-input w-full cursor-pointer"
+                >
+                  {SECURITY_QUESTIONS.map((q) => (
+                    <option key={q} value={q} className="bg-dark-800 text-white">
+                      {q}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <Input
+                label="Security Answer"
+                name="answer"
+                value={form.answer}
+                onChange={handleChange}
+                icon={FiShield}
+                placeholder="Enter security answer"
+                type="password"
+              />
+            </div>
 
             <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
               <Button
@@ -177,6 +217,11 @@ export default function UserProfilePage() {
                 value={new Date(profile.createdAt).toLocaleDateString()}
               />
             )}
+            <ProfileRow
+              icon={FiShield}
+              label="Security Question"
+              value={profile.securityQuestion || "Not set"}
+            />
           </div>
         )}
       </div>

@@ -7,9 +7,10 @@ import { register as apiRegister } from "../../api/auth";
 import { FiUser, FiMail, FiLock, FiShield, FiUserPlus, FiLogIn } from "react-icons/fi";
 
 const SECURITY_QUESTIONS = [
-  "What is your favorite color?",
-  "What is your pet's name?",
-  "What city were you born in?",
+  "What's your favorite color?",
+  "Who was your favorite teacher in secondary school?",
+  "Who is your favorite football player?",
+  "Who was your idol growing up?",
 ];
 
 export default function RegisterPage() {
@@ -75,11 +76,11 @@ export default function RegisterPage() {
     <div className="animate-fade-in">
       {/* Logo / Header */}
       <div className="text-center mb-6">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-secondary to-primary mb-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary mb-4">
           <FiUserPlus className="w-8 h-8 text-white" />
         </div>
-        <h1 className="text-3xl font-bold text-white mb-2">Create Account</h1>
-        <p className="text-gray-400">
+        <h1 className="text-3xl font-bold text-primary-themed mb-2">Create Account</h1>
+        <p className="text-secondary-themed">
           Join us to start managing your tasks
         </p>
       </div>
@@ -173,12 +174,12 @@ export default function RegisterPage() {
         </Button>
       </form>
 
-      <div className="mt-6 pt-6 border-t border-white/10">
-        <p className="text-center text-gray-400">
+      <div className="mt-6 pt-6 border-t border-themed">
+        <p className="text-center text-secondary-themed">
           Already have an account?{" "}
           <Link
             to="/login"
-            className="font-semibold text-primary hover:text-primary-light transition-colors inline-flex items-center gap-1"
+            className="font-semibold text-primary hover:text-primary-dark transition-colors inline-flex items-center gap-1"
           >
             <FiLogIn size={16} />
             Sign In

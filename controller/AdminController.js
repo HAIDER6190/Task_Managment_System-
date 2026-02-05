@@ -113,6 +113,40 @@ exports.createUser = async (req, res, next) => {
     }
 };
 
+// 📊 GET DASHBOARD STATS
+exports.getDashboardStats = async (req, res, next) => {
+    try {
+        const totalTasks = await Task.countDocuments();
+        const totalUsers = await User.countDocuments({ role: "User" });
+        const completedTasks = await Task.countDocuments({ status: "Completed" });
+        const overdueTasks = await Task.countDocuments({
+            status: "Todo",
+            dueDate: { $lt: new Date() }
+        });
+        const todoTasks = await Task.countDocuments({ status: "Todo" });
+
+        const usersWithTodoTasks = await Task.distinct("assignedTo", { status: "Todo" });
+        const usersWithTodoTasksCount = usersWithTodoTasks.length;
+
+        const excuseTasksCount = await Task.countDocuments({
+            excuse: { $exists: true, $ne: null },
+            $or: [{ adminResponse: { $exists: false } }, { adminResponse: null }]
+        });
+
+        res.json({
+            totalTasks,
+            totalUsers,
+            completedTasks,
+            overdueTasks,
+            todoTasks,
+            usersWithTodoTasksCount,
+            excuseTasksCount
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
 /* ===================== TASKS ===================== */
 
 // 🔍 SEARCH TASKS
@@ -136,9 +170,22 @@ exports.searchTasks = async (req, res, next) => {
     }
 };
 // 👥 GET ALL USERS (ADMIN ONLY)
+// 👥 GET ALL USERS (ADMIN ONLY) - Supports Filtering
 exports.getAllUsers = async (req, res, next) => {
     try {
-        const users = await User.find().select("-password -answer");
+        const { search, role } = req.query;
+        const query = {};
+
+        if (search) {
+            query.$or = [
+                { username: { $regex: search, $options: "i" } },
+                { email: { $regex: search, $options: "i" } }
+            ];
+        }
+
+        if (role) query.role = role;
+
+        const users = await User.find(query).select("-password -answer");
 
         res.json({
             count: users.length,
@@ -209,7 +256,8 @@ exports.reassignTask = async (req, res, next) => {
 exports.getTasksWithExcuses = async (req, res, next) => {
     try {
         const tasks = await Task.find({
-            excuse: { $exists: true, $ne: null }
+            excuse: { $exists: true, $ne: null },
+            $or: [{ adminResponse: { $exists: false } }, { adminResponse: null }]
         }).populate("assignedTo", "username email");
 
         res.json({ count: tasks.length, tasks });
@@ -265,6 +313,38 @@ exports.deleteTask = async (req, res, next) => {
         }
 
         res.json({ message: "Task deleted successfully" });
+    } catch (err) {
+        next(err);
+    }
+};
+
+// ✏ UPDATE TASK
+exports.updateTask = async (req, res, next) => {
+    try {
+        const { title, description, priority, assignedTo, dueDate } = req.body;
+
+        const task = await Task.findById(req.params.id);
+        if (!task) {
+            const err = new Error("Task not found");
+            err.statusCode = 404;
+            return next(err);
+        }
+
+        if (dueDate && new Date(dueDate) < new Date()) {
+            const err = new Error("Due date must be in the future");
+            err.statusCode = 400;
+            return next(err);
+        }
+
+        task.title = title || task.title;
+        task.description = description || task.description;
+        task.priority = priority || task.priority;
+        task.assignedTo = assignedTo || task.assignedTo;
+        task.dueDate = dueDate || task.dueDate;
+
+        await task.save();
+
+        res.json(task);
     } catch (err) {
         next(err);
     }

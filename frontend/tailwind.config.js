@@ -11,61 +11,75 @@ module.exports = {
       },
       colors: {
         primary: {
-          DEFAULT: "#2563eb",
-          dark: "#1d4ed8",
-          light: "#3b82f6",
+          DEFAULT: "#4f7cff", // Hardcoded to support opacity modifiers
+          dark: "#3d6ae8",
+          light: "#6b8fff",
         },
-        secondary: {
-          DEFAULT: "#7c3aed",
-          dark: "#6d28d9",
-          light: "#8b5cf6",
-        },
+        // Removed generic 'secondary' to avoid collisions. Use specific semantic names.
         accent: {
-          DEFAULT: "#06b6d4",
-          dark: "#0891b2",
+          DEFAULT: "#4f7cff",
+          dark: "#3d6ae8",
         },
-        danger: "#dc2626",
-        success: "#16a34a",
-        warning: "#ea580c",
+        danger: "#ef4444",
+        success: "#22c55e",
+        warning: "#f59e0b",
         dark: {
-          900: "#0f172a",
-          800: "#1e293b",
-          700: "#334155",
-          600: "#475569",
+          900: "#14161b",
+          800: "#1a1d24",
+          700: "#1f232b",
+          600: "#282d38",
+          500: "#343a47",
         },
+        // Common semantic colors
+        surface: {
+          DEFAULT: "var(--color-surface)",
+          elevated: "var(--color-surface-elevated)",
+          overlay: "rgba(31, 35, 43, 0.95)",
+        },
+        border: "var(--color-border)",
+      },
+      textColor: {
+        primary: "var(--color-text-primary)", // text-primary
+        secondary: "var(--color-text-secondary)", // text-secondary
+        muted: "var(--color-text-muted)", // text-muted
+        "primary-themed": "var(--color-text-primary)", // Alias for compatibility
+        "secondary-themed": "var(--color-text-secondary)",
+        "muted-themed": "var(--color-text-muted)",
+      },
+      backgroundColor: {
+        main: "var(--color-bg)", // bg-main
+        secondary: "var(--color-bg-secondary)", // bg-secondary
       },
       backgroundImage: {
-        'gradient-dark': 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)',
-        'gradient-card': 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 27, 75, 0.6) 100%)',
-        'gradient-primary': 'linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)',
-        'gradient-sidebar': 'linear-gradient(180deg, #1e293b 0%, #0f172a 100%)',
+        'gradient-dark': 'linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%)',
+        'gradient-card': 'linear-gradient(180deg, var(--color-surface) 0%, var(--color-bg-secondary) 100%)',
+        'gradient-surface': 'linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-elevated) 100%)',
+        'gradient-sidebar': 'linear-gradient(180deg, var(--color-bg-secondary) 0%, var(--color-bg) 100%)',
       },
       boxShadow: {
-        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
-        'card': '0 4px 24px 0 rgba(0, 0, 0, 0.25)',
-        'glow': '0 0 20px rgba(37, 99, 235, 0.4)',
+        'soft': '0 2px 8px 0 rgba(0, 0, 0, 0.15)',
+        'card': '0 4px 16px 0 rgba(0, 0, 0, 0.1)',
+        'elevated': '0 8px 24px 0 rgba(0, 0, 0, 0.15)',
+        'focus': '0 0 0 3px rgba(79, 124, 255, 0.25)',
       },
-      backdropBlur: {
-        'glass': '10px',
+      borderRadius: {
+        'DEFAULT': '0.625rem',
+        'lg': '0.75rem',
+        'xl': '1rem',
+        '2xl': '1.25rem',
       },
       animation: {
-        'fade-in': 'fadeIn 0.3s ease-out',
-        'slide-in': 'slideIn 0.3s ease-out',
-        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'bounce-gentle': 'bounceGentle 1s infinite',
+        'fade-in': 'fadeIn 0.25s ease-out',
+        'slide-in': 'slideIn 0.25s ease-out',
       },
       keyframes: {
         fadeIn: {
-          '0%': { opacity: '0', transform: 'translateY(-10px)' },
+          '0%': { opacity: '0', transform: 'translateY(-8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         slideIn: {
-          '0%': { opacity: '0', transform: 'translateX(-20px)' },
+          '0%': { opacity: '0', transform: 'translateX(-16px)' },
           '100%': { opacity: '1', transform: 'translateX(0)' },
-        },
-        bounceGentle: {
-          '0%, 100%': { transform: 'translateY(-5%)' },
-          '50%': { transform: 'translateY(0)' },
         },
       },
     },

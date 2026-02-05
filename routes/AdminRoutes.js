@@ -10,11 +10,13 @@ router.post("/users", verifyToken, requireAdmin, adminController.createUser);
 router.get("/users/search", verifyToken, requireAdmin, adminController.searchUsers);
 router.get("/users/:id", verifyToken, requireAdmin, adminController.getUserById);
 router.delete("/users/:id", verifyToken, requireAdmin, adminController.deleteUser);
+router.get("/stats", verifyToken, requireAdmin, adminController.getDashboardStats);
 
 // TASKS
 router.get("/tasks", verifyToken, requireAdmin, adminController.searchTasks);
 router.get("/tasks/excuses", verifyToken, requireAdmin, adminController.getTasksWithExcuses);
 router.get("/tasks/:id", verifyToken, requireAdmin, adminController.getTaskById);
+router.put("/tasks/:id", verifyToken, requireAdmin, adminController.updateTask);
 router.delete("/tasks/:id", verifyToken, requireAdmin, adminController.deleteTask);
 router.patch("/tasks/:id/reassign", verifyToken, requireAdmin, adminController.reassignTask);
 router.patch("/tasks/:id/respond", verifyToken, requireAdmin, adminController.respondToExcuse);

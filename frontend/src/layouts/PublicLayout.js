@@ -1,13 +1,25 @@
 import React from "react";
+import { useTheme } from "../store/themeStore";
+import { FiSun, FiMoon } from "react-icons/fi";
 
 export default function PublicLayout({ children }) {
+  const { isDark, toggleTheme } = useTheme();
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-main">
+      {/* Theme Toggle - Top Right */}
+      <button
+        onClick={toggleTheme}
+        className="fixed top-4 right-4 z-50 theme-toggle"
+        title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+      >
+        {isDark ? <FiSun size={20} /> : <FiMoon size={20} />}
+      </button>
+
       {/* Background decorative elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-primary/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-secondary/20 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-primary/15 rounded-full blur-3xl"></div>
       </div>
 
       {/* Content card */}

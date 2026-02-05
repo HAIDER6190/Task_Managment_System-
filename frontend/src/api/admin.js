@@ -21,9 +21,19 @@ export async function createUser(userData) {
   return data;
 }
 
+export async function getDashboardStats() {
+  const { data } = await apiClient.get("/admin/stats");
+  return data;
+}
+
 // Tasks
 export async function createTask(payload) {
   const { data } = await apiClient.post("/tasks", payload);
+  return data;
+}
+
+export async function updateTask(taskId, payload) {
+  const { data } = await apiClient.put(`/admin/tasks/${taskId}`, payload);
   return data;
 }
 

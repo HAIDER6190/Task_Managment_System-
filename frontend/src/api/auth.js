@@ -11,3 +11,12 @@ export async function login(credentials) {
   return data;
 }
 
+export async function getSecurityQuestion(username) {
+  const { data } = await apiClient.post("/auth/forgot-password", { username });
+  return data;
+}
+
+export async function resetPassword(payload) {
+  const { data } = await apiClient.post("/auth/reset-password", payload);
+  return data;
+}

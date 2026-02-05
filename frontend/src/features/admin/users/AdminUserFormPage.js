@@ -11,8 +11,16 @@ import {
     FiLock,
     FiShield,
     FiArrowLeft,
-    FiSave
+    FiSave,
+    FiHelpCircle
 } from "react-icons/fi";
+
+const SECURITY_QUESTIONS = [
+    "What's your favorite color?",
+    "Who was your favorite teacher in secondary school?",
+    "Who is your favorite football player?",
+    "Who was your idol growing up?",
+];
 
 export default function AdminUserFormPage() {
     const navigate = useNavigate();
@@ -22,6 +30,8 @@ export default function AdminUserFormPage() {
         password: "",
         confirmPassword: "",
         role: "User",
+        securityQuestion: SECURITY_QUESTIONS[0],
+        answer: "",
     });
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
@@ -59,6 +69,8 @@ export default function AdminUserFormPage() {
                 email: form.email,
                 password: form.password,
                 role: form.role,
+                securityQuestion: form.securityQuestion,
+                answer: form.answer,
             });
             setSuccess("User created successfully!");
             setTimeout(() => {
@@ -79,17 +91,17 @@ export default function AdminUserFormPage() {
             <div className="flex items-center gap-4 mb-6">
                 <button
                     onClick={() => navigate("/admin/users")}
-                    className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                    className="p-2 rounded-lg hover:bg-white/10 text-muted-themed hover:text-primary-themed transition-colors"
                 >
                     <FiArrowLeft size={20} />
                 </button>
                 <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center">
                         <FiUserPlus className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold text-white">Add New User</h1>
-                        <p className="text-sm text-gray-400">Create a new user account</p>
+                        <h1 className="text-2xl font-bold text-primary-themed">Add New User</h1>
+                        <p className="text-sm text-secondary-themed">Create a new user account</p>
                     </div>
                 </div>
             </div>
@@ -145,7 +157,7 @@ export default function AdminUserFormPage() {
 
                     {/* Role Selection */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <label className="block text-sm font-medium text-secondary-themed mb-2">
                             <FiShield className="inline mr-2" size={16} />
                             Role
                         </label>
@@ -154,28 +166,58 @@ export default function AdminUserFormPage() {
                                 type="button"
                                 onClick={() => setForm((prev) => ({ ...prev, role: "User" }))}
                                 className={`p-4 rounded-xl border-2 transition-all duration-200 ${form.role === "User"
-                                        ? "border-primary bg-primary/20 text-white"
-                                        : "border-white/10 bg-white/5 text-gray-400 hover:border-white/20"
+                                    ? "border-primary bg-primary/20 text-white"
+                                    : "border-themed bg-surface text-secondary-themed hover:border-themed"
                                     }`}
                             >
                                 <FiUser className="mx-auto mb-2" size={24} />
                                 <div className="font-medium">User</div>
-                                <p className="text-xs text-gray-500 mt-1">Standard access</p>
+                                <p className="text-xs text-muted-themed mt-1">Standard access</p>
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setForm((prev) => ({ ...prev, role: "Admin" }))}
                                 className={`p-4 rounded-xl border-2 transition-all duration-200 ${form.role === "Admin"
-                                        ? "border-purple-500 bg-purple-500/20 text-white"
-                                        : "border-white/10 bg-white/5 text-gray-400 hover:border-white/20"
+                                    ? "border-purple-500 bg-purple-500/20 text-white"
+                                    : "border-themed bg-surface text-secondary-themed hover:border-themed"
                                     }`}
                             >
                                 <FiShield className="mx-auto mb-2" size={24} />
                                 <div className="font-medium">Admin</div>
-                                <p className="text-xs text-gray-500 mt-1">Full access</p>
+                                <p className="text-xs text-muted-themed mt-1">Full access</p>
                             </button>
                         </div>
                     </div>
+
+                    {/* Security Question */}
+                    <div className="space-y-1.5">
+                        <label className="block text-sm font-medium text-secondary-themed">
+                            <FiHelpCircle className="inline mr-2" size={16} />
+                            Security Question
+                        </label>
+                        <select
+                            name="securityQuestion"
+                            value={form.securityQuestion}
+                            onChange={handleChange}
+                            className="glass-input w-full cursor-pointer"
+                        >
+                            {SECURITY_QUESTIONS.map((q) => (
+                                <option key={q} value={q} className="bg-surface text-primary-themed">
+                                    {q}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <Input
+                        label="Security Answer"
+                        name="answer"
+                        value={form.answer}
+                        onChange={handleChange}
+                        icon={FiShield}
+                        placeholder="Enter security answer"
+                        required
+                    />
 
                     {/* Submit Button */}
                     <div className="pt-4 border-t border-white/10">

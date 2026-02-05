@@ -89,3 +89,41 @@ exports.login = async (req, res) => {
         res.status(500).json({ error: "Login failed" });
     }
 };
+/* ================== FORGOT PASSWORD ================== */
+exports.getSecurityQuestion = async (req, res) => {
+    try {
+        const { username } = req.body;
+        const user = await User.findOne({ username });
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.json({ securityQuestion: user.securityQuestion });
+    } catch (err) {
+        res.status(500).json({ error: "Failed to fetch security question" });
+    }
+};
+
+exports.resetPassword = async (req, res) => {
+    try {
+        const { username, answer, newPassword } = req.body;
+
+        const user = await User.findOne({ username });
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        const match = await bcrypt.compare(answer, user.answer);
+        if (!match) {
+            return res.status(400).json({ error: "Incorrect answer" });
+        }
+
+        user.password = await bcrypt.hash(newPassword, 10);
+        await user.save();
+
+        res.json({ message: "Password reset successfully" });
+    } catch (err) {
+        res.status(500).json({ error: "Failed to reset password" });
+    }
+};

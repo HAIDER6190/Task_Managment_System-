@@ -98,13 +98,13 @@ export default function UserTaskDetailPage() {
       <div className="flex items-center gap-4">
         <button
           onClick={() => navigate("/user/dashboard")}
-          className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+          className="p-2 rounded-lg hover:bg-white/10 text-muted-themed hover:text-primary-themed transition-colors"
         >
           <FiArrowLeft size={20} />
         </button>
         <div>
-          <h1 className="text-2xl font-bold text-white">{task.title}</h1>
-          <p className="text-sm text-gray-400">
+          <h1 className="text-2xl font-bold text-primary-themed">{task.title}</h1>
+          <p className="text-sm text-secondary-themed">
             Assigned by {task.createdBy?.username || task.createdBy || "Admin"}
           </p>
         </div>
@@ -139,9 +139,9 @@ export default function UserTaskDetailPage() {
         </div>
 
         {task.description && (
-          <div className="border-t border-white/10 pt-4">
-            <h3 className="text-sm font-medium text-gray-400 mb-2">Description</h3>
-            <p className="text-gray-300 whitespace-pre-wrap">{task.description}</p>
+          <div className="border-t border-themed pt-4">
+            <h3 className="text-sm font-medium text-muted-themed mb-2">Description</h3>
+            <p className="text-secondary-themed whitespace-pre-wrap">{task.description}</p>
           </div>
         )}
       </div>
@@ -153,21 +153,21 @@ export default function UserTaskDetailPage() {
             <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
               <FiMessageCircle className="text-purple-400" size={20} />
             </div>
-            <h2 className="text-lg font-semibold text-white">Excuse Status</h2>
+            <h2 className="text-lg font-semibold text-primary-themed">Excuse Status</h2>
           </div>
 
           {/* Your submitted excuse */}
           {task.excuse && (
-            <div className="bg-white/5 rounded-xl p-4 mb-4 border border-white/10">
-              <p className="text-sm text-gray-400 mb-1">Your submitted excuse:</p>
-              <p className="text-gray-300">"{task.excuse}"</p>
+            <div className="bg-surface-elevated rounded-xl p-4 mb-4 border border-themed">
+              <p className="text-sm text-muted-themed mb-1">Your submitted excuse:</p>
+              <p className="text-secondary-themed">"{task.excuse}"</p>
             </div>
           )}
 
           {/* Admin Response */}
           {task.adminResponse && (
-            <div className="bg-gradient-to-r from-white/5 to-transparent rounded-xl p-4 border-l-4 border-primary">
-              <p className="text-sm text-gray-400 mb-2">Admin Response:</p>
+            <div className="bg-gradient-to-r from-surface-elevated to-transparent rounded-xl p-4 border-l-4 border-primary">
+              <p className="text-sm text-muted-themed mb-2">Admin Response:</p>
               <div className="flex items-center gap-2 mb-2">
                 {task.adminResponse === "accepted" ? (
                   <span className="badge badge-success">
@@ -180,7 +180,7 @@ export default function UserTaskDetailPage() {
                 )}
               </div>
               {task.adminResponseMessage && (
-                <p className="text-gray-300 italic">"{task.adminResponseMessage}"</p>
+                <p className="text-secondary-themed italic">"{task.adminResponseMessage}"</p>
               )}
             </div>
           )}
@@ -200,7 +200,7 @@ export default function UserTaskDetailPage() {
           <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
             <FiSend className="text-amber-400" size={20} />
           </div>
-          <h2 className="text-lg font-semibold text-white">Submit Excuse</h2>
+          <h2 className="text-lg font-semibold text-primary-themed">Submit Excuse</h2>
         </div>
 
         {excuseError && <Alert variant="error">{excuseError}</Alert>}
@@ -208,7 +208,7 @@ export default function UserTaskDetailPage() {
 
         <form onSubmit={handleSubmitExcuse} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-1.5">
+            <label className="block text-sm font-medium text-secondary-themed mb-1.5">
               Your Excuse
             </label>
             <textarea
@@ -228,10 +228,10 @@ export default function UserTaskDetailPage() {
   );
 }
 
-function InfoCard({ icon: Icon, label, value, color = "text-white" }) {
+function InfoCard({ icon: Icon, label, value, color = "text-primary-themed" }) {
   return (
-    <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-      <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
+    <div className="bg-surface-elevated rounded-xl p-4 border border-themed">
+      <div className="flex items-center gap-2 text-muted-themed text-sm mb-1">
         <Icon size={14} />
         {label}
       </div>

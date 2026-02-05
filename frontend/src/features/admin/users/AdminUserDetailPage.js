@@ -51,25 +51,25 @@ export default function AdminUserDetailPage() {
       <div className="flex items-center gap-4 mb-6">
         <button
           onClick={() => navigate("/admin/users")}
-          className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+          className="p-2 rounded-lg hover:bg-white/10 text-muted-themed hover:text-primary-themed transition-colors"
         >
           <FiArrowLeft size={20} />
         </button>
-        <h1 className="text-2xl font-bold text-white">User Details</h1>
+        <h1 className="text-2xl font-bold text-primary-themed">User Details</h1>
       </div>
 
       {/* User Card */}
       <div className="glass-card-dark p-6 md:p-8">
         {/* Avatar and Basic Info */}
         <div className="flex items-center gap-5 mb-8">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+          <div className="w-20 h-20 rounded-2xl bg-primary flex items-center justify-center">
             <span className="text-3xl font-bold text-white">
               {user.username?.charAt(0).toUpperCase()}
             </span>
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-white">{user.username}</h2>
-            <p className="text-gray-400">{user.email}</p>
+            <h2 className="text-2xl font-bold text-primary-themed">{user.username}</h2>
+            <p className="text-secondary-themed">{user.email}</p>
             <div className="flex items-center gap-2 mt-2">
               <span className={`badge ${user.role === "Admin" ? "badge-purple" : "badge-info"}`}>
                 <FiShield size={12} className="mr-1" />
@@ -100,13 +100,13 @@ export default function AdminUserDetailPage() {
 
 function DetailRow({ icon: Icon, label, value }) {
   return (
-    <div className="flex items-center gap-4 py-3 border-b border-white/5">
-      <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
-        <Icon className="text-gray-400" size={18} />
+    <div className="flex items-center gap-4 py-3 border-b border-themed">
+      <div className="w-10 h-10 rounded-xl bg-surface-elevated flex items-center justify-center">
+        <Icon className="text-muted-themed" size={18} />
       </div>
       <div className="flex-1">
-        <p className="text-sm text-gray-400">{label}</p>
-        <p className="text-white font-medium">{value}</p>
+        <p className="text-sm text-secondary-themed">{label}</p>
+        <p className="text-primary-themed font-medium">{value}</p>
       </div>
     </div>
   );

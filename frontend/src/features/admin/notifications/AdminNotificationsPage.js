@@ -42,8 +42,8 @@ export default function AdminNotificationsPage() {
           <FiBell className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-white">Notifications</h1>
-          <p className="text-sm text-gray-400">
+          <h1 className="text-2xl font-bold text-primary-themed">Notifications</h1>
+          <p className="text-sm text-muted-themed">
             Review and respond to user excuse submissions
           </p>
         </div>
@@ -58,8 +58,8 @@ export default function AdminNotificationsPage() {
 
       {/* Notifications List */}
       <div className="glass-card-dark overflow-hidden">
-        <div className="px-6 py-4 border-b border-white/10">
-          <h2 className="text-lg font-semibold text-white">Pending Excuses</h2>
+        <div className="px-6 py-4 border-b border-themed">
+          <h2 className="text-lg font-semibold text-primary-themed">Pending Excuses</h2>
         </div>
 
         {loading ? (
@@ -76,8 +76,8 @@ export default function AdminNotificationsPage() {
           <div className="divide-y divide-white/5">
             {items.map((n) => (
               <Link
-                key={n.taskId}
-                to={`/admin/tasks/${n.taskId}`}
+                key={n._id}
+                to={`/admin/tasks/${n._id}`}
                 className="block p-5 hover:bg-white/5 transition-colors group"
               >
                 <div className="flex items-start gap-4">
@@ -88,29 +88,29 @@ export default function AdminNotificationsPage() {
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-white font-medium mb-1 group-hover:text-primary transition-colors">
-                      {n.taskTitle}
+                    <h3 className="text-primary-themed font-medium mb-1 group-hover:text-primary transition-colors">
+                      {n.title}
                     </h3>
-                    <div className="flex flex-wrap items-center gap-3 text-sm text-gray-400">
+                    <div className="flex flex-wrap items-center gap-3 text-sm text-muted-themed">
                       <span className="flex items-center gap-1">
-                        From <span className="text-gray-300 font-medium">{n.username}</span>
+                        From <span className="text-secondary-themed font-medium">{n.assignedTo?.username || "Unknown"}</span>
                       </span>
                       <span className="flex items-center gap-1">
                         <FiClock size={14} />
-                        {n.submittedAt
-                          ? new Date(n.submittedAt).toLocaleString()
+                        {n.updatedAt
+                          ? new Date(n.updatedAt).toLocaleString()
                           : "Recently"}
                       </span>
                     </div>
                     {n.excuse && (
-                      <p className="mt-2 text-sm text-gray-400 line-clamp-2">
+                      <p className="mt-2 text-sm text-muted-themed line-clamp-2">
                         "{n.excuse}"
                       </p>
                     )}
                   </div>
 
                   {/* Arrow */}
-                  <div className="text-gray-600 group-hover:text-primary transition-colors">
+                  <div className="text-muted-themed group-hover:text-primary transition-colors">
                     <FiArrowRight size={20} />
                   </div>
                 </div>

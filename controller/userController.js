@@ -29,6 +29,10 @@ exports.updateMyProfile = async (req, res, next) => {
             updateData.password = await bcrypt.hash(updateData.password, 10);
         }
 
+        if (updateData.answer) {
+            updateData.answer = await bcrypt.hash(updateData.answer, 10);
+        }
+
         const user = await User.findByIdAndUpdate(
             req.user.id,
             updateData,

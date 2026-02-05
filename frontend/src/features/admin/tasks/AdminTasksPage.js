@@ -86,12 +86,12 @@ export default function AdminTasksPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center">
             <FiCheckSquare className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">Tasks</h1>
-            <p className="text-sm text-gray-400">
+            <h1 className="text-2xl font-bold text-primary-themed">Tasks</h1>
+            <p className="text-sm text-muted-themed">
               Manage and assign tasks to users
             </p>
           </div>
@@ -125,10 +125,10 @@ export default function AdminTasksPage() {
               onChange={(e) => setStatus(e.target.value)}
               className="glass-input w-full cursor-pointer"
             >
-              <option value="" className="bg-dark-800">All Status</option>
-              <option value="Todo" className="bg-dark-800">Todo</option>
-              <option value="Completed" className="bg-dark-800">Completed</option>
-              <option value="Excused" className="bg-dark-800">Excused</option>
+              <option value="" className="bg-surface">All Status</option>
+              <option value="Todo" className="bg-surface">Todo</option>
+              <option value="Completed" className="bg-surface">Completed</option>
+              <option value="Excused" className="bg-surface">Excused</option>
             </select>
           </div>
 
@@ -139,10 +139,10 @@ export default function AdminTasksPage() {
               onChange={(e) => setPriority(e.target.value)}
               className="glass-input flex-1 cursor-pointer"
             >
-              <option value="" className="bg-dark-800">All Priority</option>
-              <option value="Low" className="bg-dark-800">Low</option>
-              <option value="Medium" className="bg-dark-800">Medium</option>
-              <option value="High" className="bg-dark-800">High</option>
+              <option value="" className="bg-surface">All Priority</option>
+              <option value="Low" className="bg-surface">Low</option>
+              <option value="Medium" className="bg-surface">Medium</option>
+              <option value="High" className="bg-surface">High</option>
             </select>
             <Button type="submit" variant="secondary" icon={FiFilter}>
               Filter
@@ -153,15 +153,15 @@ export default function AdminTasksPage() {
 
       {/* Tasks Table */}
       <div className="glass-card-dark overflow-hidden">
-        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">All Tasks</h2>
-          <span className="text-sm text-gray-400">{filteredTasks.length} tasks</span>
+        <div className="px-6 py-4 border-b border-themed flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-primary-themed">All Tasks</h2>
+          <span className="text-sm text-muted-themed">{filteredTasks.length} tasks</span>
         </div>
 
         {loading ? (
           <Spinner label="Loading tasks..." />
         ) : filteredTasks.length === 0 ? (
-          <div className="p-8 text-center text-gray-400">
+          <div className="p-8 text-center text-muted-themed">
             <FiCheckSquare className="w-12 h-12 mx-auto mb-3 opacity-50" />
             <p>No tasks found.</p>
           </div>
@@ -187,7 +187,7 @@ export default function AdminTasksPage() {
                       <td>
                         <Link
                           to={`/admin/tasks/${id}`}
-                          className="font-medium text-white hover:text-primary transition-colors"
+                          className="font-medium text-primary-themed hover:text-primary transition-colors"
                         >
                           {task.title}
                         </Link>
@@ -198,12 +198,12 @@ export default function AdminTasksPage() {
                       <td>
                         <PriorityBadge value={task.priority} />
                       </td>
-                      <td className="text-gray-400">
+                      <td className="text-muted-themed">
                         {task.dueDate
                           ? new Date(task.dueDate).toLocaleDateString()
                           : "-"}
                       </td>
-                      <td className="text-gray-300">
+                      <td className="text-secondary-themed">
                         {task.assignedTo?.username || task.assignedTo || "-"}
                       </td>
                       <td>
